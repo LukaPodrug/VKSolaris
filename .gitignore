@@ -1,0 +1,6 @@
+**/node_modules/
+**/dist/
+**/build/
+backend/.env
+**/*.log
+.DS_Store
