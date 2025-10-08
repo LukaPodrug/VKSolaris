@@ -4,7 +4,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://<your-render-backend>/:splat"
+  to = "https://vksolaris.onrender.com/:splat"
   status = 200
 
 [[redirects]]
