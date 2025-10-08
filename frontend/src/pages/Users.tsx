@@ -13,6 +13,9 @@ export function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [memberId, setMemberId] = useState('');
 
   async function load() {
     setLoading(true);
@@ -41,6 +44,17 @@ export function Users() {
     await api.post(`/users/${id}/apply-promo`, { discountPercent });
     load();
   }
+  async function issueWallet(id: number, u: User) {
+    await api.post(`/wallet/issue/${id}`, { firstName: u.first_name, lastName: u.last_name, memberId: u.member_id });
+    load();
+  }
+  async function createUser() {
+    await api.post('/users', { firstName, lastName, memberId });
+    setFirstName('');
+    setLastName('');
+    setMemberId('');
+    load();
+  }
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
@@ -48,6 +62,12 @@ export function Users() {
   return (
     <div>
       <h2>Users</h2>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+        <input placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+        <input placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+        <input placeholder="Member ID" value={memberId} onChange={(e) => setMemberId(e.target.value)} />
+        <button onClick={createUser}>Create</button>
+      </div>
       <table cellPadding={6}>
         <thead>
           <tr>
@@ -69,7 +89,8 @@ export function Users() {
                 <button onClick={() => approve(u.id)}>Approve</button>{' '}
                 <button onClick={() => suspend(u.id)}>Suspend</button>{' '}
                 <button onClick={() => applyPromo(u.id, 100)}>Youth Free</button>{' '}
-                <button onClick={() => applyPromo(u.id, 50)}>50% Off</button>
+                <button onClick={() => applyPromo(u.id, 50)}>50% Off</button>{' '}
+                <button onClick={() => issueWallet(u.id, u)}>Issue Wallet</button>
               </td>
             </tr>
           ))}
