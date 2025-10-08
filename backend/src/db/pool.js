@@ -1,4 +1,5 @@
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import { env } from '../config/env.js';
 
 // Neon provides a Postgres connection string. SSL must be enabled on Render.
