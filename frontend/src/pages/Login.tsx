@@ -18,7 +18,7 @@ export function Login() {
       const { data } = await api.post('/auth/login', { email, password });
       saveToken(data.token);
       setAuthToken(data.token);
-      navigate('/users');
+      navigate('/users', { replace: true });
     } catch (err) {
       setError('Invalid credentials');
     }

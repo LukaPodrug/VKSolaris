@@ -8,6 +8,12 @@ import { AppBar, Toolbar, Button, Container } from '@mui/material';
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token } = useAuth();
+  if (token === null) {
+    // if no token in localStorage, redirect
+    if (typeof window !== 'undefined' && !localStorage.getItem('admin_token')) {
+      return <Navigate to="/login" replace />;
+    }
+  }
   return token ? children : <Navigate to="/login" replace />;
 }
 

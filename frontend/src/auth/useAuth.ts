@@ -3,11 +3,8 @@ import { useEffect, useState } from 'react';
 const TOKEN_KEY = 'admin_token';
 
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    setToken(localStorage.getItem(TOKEN_KEY));
-  }, []);
+  const initialToken = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
+  const [token, setToken] = useState<string | null>(initialToken);
 
   function saveToken(newToken: string) {
     localStorage.setItem(TOKEN_KEY, newToken);
