@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 
 type User = {
   id: number;
@@ -56,47 +57,51 @@ export function Users() {
     load();
   }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <div>
-      <h2>Users</h2>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        <input placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-        <input placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-        <input placeholder="Member ID" value={memberId} onChange={(e) => setMemberId(e.target.value)} />
-        <button onClick={createUser}>Create</button>
-      </div>
-      <table cellPadding={6}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Member ID</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.id}</td>
-              <td>{u.first_name} {u.last_name}</td>
-              <td>{u.member_id}</td>
-              <td>{u.status}</td>
-              <td>
-                <button onClick={() => approve(u.id)}>Approve</button>{' '}
-                <button onClick={() => suspend(u.id)}>Suspend</button>{' '}
-                <button onClick={() => applyPromo(u.id, 100)}>Youth Free</button>{' '}
-                <button onClick={() => applyPromo(u.id, 50)}>50% Off</button>{' '}
-                <button onClick={() => issueWallet(u.id, u)}>Issue Wallet</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 2 }}>Users</Typography>
+      <Paper sx={{ p: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <TextField label="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          <TextField label="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          <TextField label="Member ID" value={memberId} onChange={(e) => setMemberId(e.target.value)} />
+          <Button variant="contained" onClick={createUser}>Create</Button>
+        </Box>
+      </Paper>
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Member ID</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map(u => (
+              <TableRow key={u.id}>
+                <TableCell>{u.id}</TableCell>
+                <TableCell>{u.first_name} {u.last_name}</TableCell>
+                <TableCell>{u.member_id}</TableCell>
+                <TableCell>{u.status}</TableCell>
+                <TableCell>
+                  <Button size="small" onClick={() => approve(u.id)}>Approve</Button>
+                  <Button size="small" onClick={() => suspend(u.id)}>Suspend</Button>
+                  <Button size="small" onClick={() => applyPromo(u.id, 100)}>Youth Free</Button>
+                  <Button size="small" onClick={() => applyPromo(u.id, 50)}>50% Off</Button>
+                  <Button size="small" onClick={() => issueWallet(u.id, u)}>Issue Wallet</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 

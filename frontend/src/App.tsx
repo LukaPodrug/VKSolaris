@@ -4,6 +4,7 @@ import { Users } from './pages/Users';
 import { Promos } from './pages/Promos';
 import { useAuth } from './auth/useAuth';
 import { setAuthToken } from './api/client';
+import { AppBar, Toolbar, Button, Container } from '@mui/material';
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token } = useAuth();
@@ -20,20 +21,24 @@ export function App() {
     navigate('/login');
   }
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', padding: 16 }}>
-      <nav style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-        <Link to="/users">Users</Link>
-        <Link to="/promos">Promos</Link>
-        <div style={{ marginLeft: 'auto' }}>
-          {token && <button onClick={logout}>Logout</button>}
-        </div>
-      </nav>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
-        <Route path="/promos" element={<PrivateRoute><Promos /></PrivateRoute>} />
-        <Route path="*" element={<Navigate to="/users" replace />} />
-      </Routes>
+    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit" component={Link} to="/users">Users</Button>
+          <Button color="inherit" component={Link} to="/promos">Promos</Button>
+          <div style={{ marginLeft: 'auto' }}>
+            {token && <Button color="inherit" onClick={logout}>Logout</Button>}
+          </div>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ mt: 3 }}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+          <Route path="/promos" element={<PrivateRoute><Promos /></PrivateRoute>} />
+          <Route path="*" element={<Navigate to="/users" replace />} />
+        </Routes>
+      </Container>
     </div>
   );
 }

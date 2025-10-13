@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../api/client';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 
 type Promo = {
   id: number;
@@ -39,37 +40,41 @@ export function Promos() {
   }
 
   return (
-    <div>
-      <h2>Promos</h2>
-      <form onSubmit={create} style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        <input placeholder="CODE" value={code} onChange={(e) => setCode(e.target.value)} />
-        <input type="number" placeholder="Discount %" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
-        <button type="submit">Create</button>
-      </form>
-      <table cellPadding={6}>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Discount</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {promos.map(p => (
-            <tr key={p.id}>
-              <td>{p.code}</td>
-              <td>{p.discount_percent}%</td>
-              <td>{p.is_active ? 'Active' : 'Inactive'}</td>
-              <td>
-                <button onClick={() => toggleActive(p)}>{p.is_active ? 'Disable' : 'Enable'}</button>{' '}
-                <button onClick={() => remove(p.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 2 }}>Promos</Typography>
+      <Paper sx={{ p: 2, mb: 2 }}>
+        <Box component="form" onSubmit={create} sx={{ display: 'flex', gap: 1 }}>
+          <TextField label="CODE" value={code} onChange={(e) => setCode(e.target.value)} />
+          <TextField type="number" label="Discount %" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
+          <Button type="submit" variant="contained">Create</Button>
+        </Box>
+      </Paper>
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Code</TableCell>
+              <TableCell>Discount</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {promos.map(p => (
+              <TableRow key={p.id}>
+                <TableCell>{p.code}</TableCell>
+                <TableCell>{p.discount_percent}%</TableCell>
+                <TableCell>{p.is_active ? 'Active' : 'Inactive'}</TableCell>
+                <TableCell>
+                  <Button size="small" onClick={() => toggleActive(p)}>{p.is_active ? 'Disable' : 'Enable'}</Button>
+                  <Button size="small" color="error" onClick={() => remove(p.id)}>Delete</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 
