@@ -9,6 +9,7 @@ import usersRoutes from './routes/usersRoutes.js';
 import promosRoutes from './routes/promosRoutes.js';
 import walletRoutes from './routes/walletRoutes.js';
 import iapRoutes from './routes/iapRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
 
 const app = express();
 app.use(cors());
@@ -29,6 +30,7 @@ app.use('/users', usersRoutes);
 app.use('/promos', promosRoutes);
 app.use('/wallet', walletRoutes);
 app.use('/iap', iapRoutes);
+app.use('/public', publicRoutes);
 
 const port = env.port;
 app.listen(port, () => {
