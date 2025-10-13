@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 import { Login } from './pages/Login';
 import { Users } from './pages/Users';
-import { Promos } from './pages/Promos';
 import { useAuth } from './auth/useAuth';
 import { setAuthToken } from './api/client';
 import { AppBar, Toolbar, Button, Container } from '@mui/material';
@@ -31,7 +30,6 @@ export function App() {
       <AppBar position="static">
         <Toolbar>
           <Button color="inherit" component={Link} to="/users">Users</Button>
-          <Button color="inherit" component={Link} to="/promos">Promos</Button>
           <div style={{ marginLeft: 'auto' }}>
             {token && <Button color="inherit" onClick={logout}>Logout</Button>}
           </div>
@@ -41,7 +39,6 @@ export function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
-          <Route path="/promos" element={<PrivateRoute><Promos /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/users" replace />} />
         </Routes>
       </Container>
