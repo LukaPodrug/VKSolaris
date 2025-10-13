@@ -17,8 +17,8 @@ function RegisterScreen({ navigation }) {
   async function register() {
     setError(null);
     try {
-      const { data } = await api.post('/public/register', { firstName, lastName, memberId });
-      navigation.navigate('Status', { memberId });
+      const { data } = await api.post('/public/register', { firstName, lastName });
+      navigation.navigate('Status', { memberId: data.memberId });
     } catch (e) {
       setError('Registration failed');
     }
@@ -29,7 +29,7 @@ function RegisterScreen({ navigation }) {
       <Text style={{ fontSize: 20, marginBottom: 12 }}>Register</Text>
       <TextInput label="First name" value={firstName} onChangeText={setFirstName} style={{ marginBottom: 8 }} />
       <TextInput label="Last name" value={lastName} onChangeText={setLastName} style={{ marginBottom: 8 }} />
-      <TextInput label="Member ID" value={memberId} onChangeText={setMemberId} style={{ marginBottom: 8 }} />
+      {/* Member ID will be assigned by server (DB id). No input here. */}
       {!!error && <Text style={{ color: 'red' }}>{error}</Text>}
       <Button mode="contained" onPress={register}>Register</Button>
     </View>

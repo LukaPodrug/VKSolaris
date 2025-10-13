@@ -16,11 +16,11 @@ export async function listUsers(req, res) {
 }
 
 export async function createUser(req, res) {
-  const { firstName, lastName, memberId } = req.body || {};
-  if (!firstName || !lastName || !memberId) return res.status(400).json({ error: 'Missing fields' });
+  const { firstName, lastName } = req.body || {};
+  if (!firstName || !lastName) return res.status(400).json({ error: 'Missing fields' });
   const { rows } = await pool.query(
-    'INSERT INTO users (first_name, last_name, member_id, status) VALUES ($1,$2,$3,$4) RETURNING *',
-    [firstName, lastName, memberId, 'pending']
+    'INSERT INTO users (first_name, last_name, status) VALUES ($1,$2,$3) RETURNING *',
+    [firstName, lastName, 'pending']
   );
   res.status(201).json(rows[0]);
 }

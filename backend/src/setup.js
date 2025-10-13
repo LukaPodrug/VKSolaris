@@ -13,7 +13,7 @@ export async function ensureSchema(pool) {
       id SERIAL PRIMARY KEY,
       first_name TEXT NOT NULL,
       last_name TEXT NOT NULL,
-      member_id TEXT UNIQUE NOT NULL,
+      member_id TEXT UNIQUE,
       status TEXT NOT NULL DEFAULT 'pending', -- pending | active | suspended
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -76,6 +76,26 @@ export async function ensureSchema(pool) {
     CREATE TRIGGER wallet_cards_updated_at BEFORE UPDATE ON wallet_cards
     FOR EACH ROW EXECUTE FUNCTION set_updated_at();
   `);
+
+  // Ensure member_id auto-populates from id when not provided
+  await pool.query(`
+    CREATE OR REPLACE FUNCTION ensure_member_id()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      IF NEW.member_id IS NULL THEN
+        NEW.member_id := NEW.id::text;
+      END IF;
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS users_member_id ON users;
+    CREATE TRIGGER users_member_id BEFORE INSERT ON users
+    FOR EACH ROW EXECUTE FUNCTION ensure_member_id();
+  `);
+
+  // Backfill missing member_id values
+  await pool.query('UPDATE users SET member_id = id::text WHERE member_id IS NULL');
 
   // Ensure at least one admin exists, using env defaults if provided
   const defaultEmail = process.env.ADMIN_DEFAULT_EMAIL;
