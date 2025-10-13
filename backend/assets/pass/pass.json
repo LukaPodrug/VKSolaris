@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.com.example",
+  "teamIdentifier": "TEAMID",
+  "organizationName": "Waterpolo Club",
+  "description": "Season Ticket",
+  "serialNumber": "placeholder",
+  "backgroundColor": "rgb(0,122,255)",
+  "labelColor": "rgb(255,255,255)",
+  "foregroundColor": "rgb(0,0,0)",
+  "eventTicket": {
+    "primaryFields": [
+      { "key": "event", "label": "Season", "value": "2025" }
+    ],
+    "secondaryFields": [
+      { "key": "member", "label": "Member", "value": "" }
+    ]
+  }
+}

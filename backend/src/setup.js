@@ -46,10 +46,25 @@ export async function ensureSchema(pool) {
       last_name TEXT NOT NULL,
       member_id TEXT NOT NULL,
       design_json JSONB,
+      apple_pass_url TEXT,
+      google_wallet_url TEXT,
       status TEXT NOT NULL DEFAULT 'active', -- active | revoked | expired
       expires_at TIMESTAMPTZ NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      stripe_customer_id TEXT,
+      stripe_subscription_id TEXT,
+      stripe_checkout_session_id TEXT,
+      status TEXT NOT NULL DEFAULT 'pending', -- pending | active | canceled | past_due
+      current_period_end TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (user_id)
     );
 
     CREATE OR REPLACE FUNCTION set_updated_at()
@@ -74,6 +89,10 @@ export async function ensureSchema(pool) {
 
     DROP TRIGGER IF EXISTS wallet_cards_updated_at ON wallet_cards;
     CREATE TRIGGER wallet_cards_updated_at BEFORE UPDATE ON wallet_cards
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+    DROP TRIGGER IF EXISTS subscriptions_updated_at ON subscriptions;
+    CREATE TRIGGER subscriptions_updated_at BEFORE UPDATE ON subscriptions
     FOR EACH ROW EXECUTE FUNCTION set_updated_at();
   `);
 
