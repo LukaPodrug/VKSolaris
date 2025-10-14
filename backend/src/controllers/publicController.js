@@ -1,16 +1,20 @@
 import { pool } from '../db/index.js';
 import Stripe from 'stripe';
 import { env } from '../config/env.js';
+import bcrypt from 'bcrypt';
 
 export async function registerUser(req, res) {
-  const { firstName, lastName } = req.body || {};
-  if (!firstName || !lastName) return res.status(400).json({ error: 'Missing fields' });
+  const { firstName, lastName, username, password } = req.body || {};
+  if (!firstName || !lastName || !username || !password) return res.status(400).json({ error: 'Missing fields' });
   try {
+    const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [username]);
+    if (existing.rows.length) return res.status(409).json({ error: 'Username already taken' });
+    const hash = await bcrypt.hash(password, 10);
     const { rows } = await pool.query(
-      'INSERT INTO users (first_name, last_name, status) VALUES ($1,$2,$3) RETURNING id, status, member_id',
-      [firstName, lastName, 'pending']
+      'INSERT INTO users (first_name, last_name, username, password_hash, status) VALUES ($1,$2,$3,$4,$5) RETURNING id, status, member_id, username',
+      [firstName, lastName, username, hash, 'pending']
     );
-    res.status(201).json({ userId: rows[0].id, memberId: rows[0].member_id, status: rows[0].status });
+    res.status(201).json({ userId: rows[0].id, memberId: rows[0].member_id, status: rows[0].status, username: rows[0].username });
   } catch (e) {
     if (e.code === '23505') return res.status(409).json({ error: 'Member already registered' });
     res.status(500).json({ error: 'Registration failed' });
@@ -88,6 +92,17 @@ export async function getPurchaseStatus(req, res) {
   );
   if (!rows.length) return res.json({ status: 'none' });
   return res.json({ status: rows[0].status });
+}
+
+export async function publicLogin(req, res) {
+  const { username, password } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'Missing fields' });
+  const { rows } = await pool.query('SELECT id, member_id, status, password_hash FROM users WHERE username=$1', [username]);
+  if (!rows.length) return res.status(401).json({ error: 'Invalid credentials' });
+  const user = rows[0];
+  const ok = await bcrypt.compare(password, user.password_hash || '');
+  if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
+  return res.json({ memberId: user.member_id, status: user.status });
 }
 
 export async function issueWalletByMember(req, res) {

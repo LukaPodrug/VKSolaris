@@ -14,6 +14,8 @@ export async function ensureSchema(pool) {
       first_name TEXT NOT NULL,
       last_name TEXT NOT NULL,
       member_id TEXT UNIQUE,
+      username TEXT UNIQUE,
+      password_hash TEXT,
       status TEXT NOT NULL DEFAULT 'pending', -- pending | active | suspended
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -112,6 +114,10 @@ export async function ensureSchema(pool) {
     CREATE TRIGGER users_member_id BEFORE INSERT ON users
     FOR EACH ROW EXECUTE FUNCTION ensure_member_id();
   `);
+
+  // Backfill for new credential columns if missing (in case of existing DB)
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS username TEXT UNIQUE`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT`);
 
   // Backfill missing member_id values
   await pool.query('UPDATE users SET member_id = id::text WHERE member_id IS NULL');

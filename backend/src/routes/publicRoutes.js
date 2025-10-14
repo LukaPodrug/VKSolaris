@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { registerUser, getUserStatus, getActivePromo, createCheckoutSession, getPurchaseStatus, issueWalletByMember } from '../controllers/publicController.js';
+import { registerUser, getUserStatus, getActivePromo, createCheckoutSession, getPurchaseStatus, issueWalletByMember, publicLogin } from '../controllers/publicController.js';
 
 const router = Router();
 
 router.post('/register', registerUser);
+router.post('/login', publicLogin);
 router.get('/status', getUserStatus);
 router.get('/active-promo', getActivePromo);
 router.post('/checkout-session', createCheckoutSession);
