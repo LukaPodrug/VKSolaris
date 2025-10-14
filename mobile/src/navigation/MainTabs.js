@@ -15,3 +15,4 @@ export function MainTabs({ route }) {
     </Tabs.Navigator>
   );
 }
+
