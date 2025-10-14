@@ -6,3 +6,17 @@ backend/.env
 .DS_Store
 
 frontend/.env
+# Ignore local env files
+*.env
+**/.env
+mobile/.env
+backend/.env
+
+# Expo local state
+mobile/.expo/
+
+# Node modules
+**/node_modules/
+
+# macOS
+.DS_Store
