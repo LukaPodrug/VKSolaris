@@ -17,7 +17,7 @@ export function LoginScreen({ navigation }) {
       const { data } = await api.post('/public/login', { username, password });
       setMemberId(data.memberId);
       setStatus(data.status);
-      if (data.status === 'confirmed') {
+      if (data.status === 'confirmed' || data.status === 'active') {
         navigation.reset({ index: 0, routes: [{ name: 'MainTabs', params: { memberId: data.memberId } }] });
       }
     } catch (_e) {
@@ -27,7 +27,7 @@ export function LoginScreen({ navigation }) {
     }
   }
 
-  const showMessage = status && status !== 'confirmed';
+  const showMessage = status && status !== 'confirmed' && status !== 'active';
   const message = status === 'pending' ? 'Your account is not yet confirmed.'
     : status === 'suspended' ? 'Your account is suspended.'
     : status === 'invalid' ? 'Invalid credentials.'
