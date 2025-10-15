@@ -69,6 +69,7 @@ export async function generateApplePass(req, res) {
 
     // Generate .pkpass file as a stream
     const stream = await pass.generate();
+    res.status(200);
     res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
     res.setHeader('Content-Disposition', `attachment; filename=season-${memberId}.pkpass`);
     stream.pipe(res);
