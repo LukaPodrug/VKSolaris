@@ -36,6 +36,7 @@ export async function generateApplePass(req, res) {
     );
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
+    const userData = rows[0];
     const modelPath = path.join(process.cwd(), 'assets', 'pass.pass');
 
     const pass = new passkit.Pass({
@@ -58,16 +59,24 @@ export async function generateApplePass(req, res) {
       },
     });
 
-    // Add fields and barcode
-    pass.headerFields = [{ key: 'member', label: 'Member', value: memberId }];
-    pass.primaryFields = [{ key: 'name', label: 'Name', value: `${rows[0].first_name} ${rows[0].last_name}` }];
+    pass.eventTicket = {
+      headerFields: [
+        { key: 'member_id', label: 'MEMBER ID', value: memberId }
+      ],
+      primaryFields: [
+        { key: 'member_name', label: 'NAME', value: `${userData.first_name} ${userData.last_name}` }
+      ],
+      secondaryFields: [
+        { key: 'event_season', label: 'SEASON', value: '2025/26' } 
+      ]
+    };
+    
     pass.barcode({
       format: 'PKBarcodeFormatQR',
       message: memberId,
       messageEncoding: 'utf-8',
     });
 
-    // Generate .pkpass file as a stream
     const stream = await pass.generate();
     const buffer = await streamToBufferAsync(stream);
 
@@ -79,7 +88,7 @@ export async function generateApplePass(req, res) {
     res.send(buffer);
   } catch (e) {
     console.error('Pass generation error:', e);
-    return res.status(400).json({ error: e.message });
+    return res.status(500).json({ error: 'Internal server error during pass generation.' });
   }
 }
 
@@ -97,8 +106,6 @@ export async function generateGoogleWalletLink(req, res) {
     const memberId = req.query.memberId;
     if (!memberId) return res.status(400).json({ error: 'memberId required' });
 
-    // In a full implementation, you'd create a class and object via Google Wallet API.
-    // Here we construct a "Save to Google Wallet" JWT per their reference.
     const auth = new GoogleAuth({
       keyFile: env.googleWalletServiceAccountKeyPath,
       scopes: ['https://www.googleapis.com/auth/wallet_object.issuer'],

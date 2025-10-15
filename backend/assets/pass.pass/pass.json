@@ -2,18 +2,50 @@
   "formatVersion": 1,
   "passTypeIdentifier": "pass.com.vksolaris.season",
   "teamIdentifier": "KM6M489FBH",
+  
   "organizationName": "Waterpolo Club",
-  "description": "Season Ticket",
+  "description": "Season Ticket - Waterpolo Club",
+  "logoText": "Waterpolo",
+  
   "backgroundColor": "rgb(0,122,255)",
   "labelColor": "rgb(255,255,255)",
   "foregroundColor": "rgb(0,0,0)",
+  
   "eventTicket": {
+    "headerFields": [
+      {
+        "key": "member_id",
+        "label": "MEMBER ID",
+        "value": "123456"
+      }
+    ],
     "primaryFields": [
-      { "key": "event", "label": "Season", "value": "2025" }
+      {
+        "key": "member_name",
+        "label": "NAME",
+        "value": "John Doe"
+      }
     ],
     "secondaryFields": [
-      { "key": "member", "label": "Member" }
+      {
+        "key": "event_season",
+        "label": "SEASON",
+        "value": "2025"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "club_contact",
+        "label": "CONTACT",
+        "value": "info@club.com"
+      }
     ]
+  },
+  
+  "barcode": {
+    "format": "PKBarcodeFormatQR",
+    "message": "DEFAULT_MEMBER_ID",
+    "messageEncoding": "utf-8"
   }
 }
 
