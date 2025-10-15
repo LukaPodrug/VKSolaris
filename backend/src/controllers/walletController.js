@@ -36,7 +36,7 @@ export async function generateApplePass(req, res) {
     );
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
-    const modelPath = path.join(process.cwd(), 'assets', 'pass.pass');
+    const modelPath = path.join(process.cwd(), '..', 'assets', 'pass.pass');
 
     const pass = new passkit.Pass({
       model: modelPath,
