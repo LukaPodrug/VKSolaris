@@ -2,8 +2,7 @@ import { pool } from '../db/index.js';
 import { env } from '../config/env.js';
 import { readFileSync } from 'fs';
 import path from 'path';
-import passkit from 'passkit-generator';
-const { PKPass } = passkit;
+import { PKPass } from 'passkit-generator';
 import { GoogleAuth } from 'google-auth-library';
 
 export async function issueWallet(req, res) {
