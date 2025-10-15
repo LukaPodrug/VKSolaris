@@ -2,7 +2,7 @@ import { pool } from '../db/index.js';
 import { env } from '../config/env.js';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { PKPass } from 'passkit-generator';
+import passkit from 'passkit-generator';
 import { GoogleAuth } from 'google-auth-library';
 
 export async function issueWallet(req, res) {
@@ -29,38 +29,51 @@ export async function generateApplePass(req, res) {
   try {
     const memberId = req.query.memberId;
     if (!memberId) return res.status(400).json({ error: 'memberId required' });
-    const { rows } = await pool.query('SELECT u.id, u.first_name, u.last_name FROM users u WHERE u.member_id=$1', [memberId]);
+
+    const { rows } = await pool.query(
+      'SELECT u.id, u.first_name, u.last_name FROM users u WHERE u.member_id=$1',
+      [memberId]
+    );
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
     const modelPath = path.join(process.cwd(), 'backend', 'assets', 'pass');
-    const wwdr = env.appleWwdrCertPath ? readFileSync(env.appleWwdrCertPath) : null;
-    const signerCert = env.applePassCertPath ? readFileSync(env.applePassCertPath) : null;
-    const pass = await PKPass.from({
+
+    const pass = new passkit.Pass({
       model: modelPath,
       certificates: {
-        wwdr,
-        signerCert,
-        signerKey: signerCert,
-        signerKeyPassphrase: env.applePassCertPassword,
+        wwdr: env.appleWwdrCertPath,
+        signerCert: env.applePassCertPath,
+        signerKey: {
+          keyFile: env.applePassCertPath,
+          passphrase: env.applePassCertPassword,
+        },
+      },
+      overrides: {
+        serialNumber: `season-${memberId}`,
+        description: 'Season Ticket',
+        backgroundColor: 'rgb(0,122,255)',
+        foregroundColor: 'rgb(0,0,0)',
+        labelColor: 'rgb(255,255,255)',
+        organizationName: 'Waterpolo Club',
       },
     });
 
+    // Add fields and barcode
     pass.headerFields = [{ key: 'member', label: 'Member', value: memberId }];
-    pass.barcode('PKBarcodeFormatQR', memberId, 'UTF-8');
-    pass.passTypeIdentifier = env.applePassTypeIdentifier || 'pass.com.example';
-    pass.teamIdentifier = env.appleTeamIdentifier || 'TEAMID';
-    pass.labelColor = 'rgb(255,255,255)';
-    pass.foregroundColor = 'rgb(0,0,0)';
-    pass.backgroundColor = 'rgb(0,122,255)';
-    pass.organizationName = 'Season Ticket';
-    pass.description = 'Season Ticket';
-    pass.serialNumber = `season-${memberId}`;
+    pass.primaryFields = [{ key: 'name', label: 'Name', value: `${rows[0].first_name} ${rows[0].last_name}` }];
+    pass.barcode({
+      format: 'PKBarcodeFormatQR',
+      message: memberId,
+      messageEncoding: 'utf-8',
+    });
 
-    const buf = await pass.asBuffer();
+    // Generate .pkpass file as a stream
+    const stream = await pass.generate();
     res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
     res.setHeader('Content-Disposition', `attachment; filename=season-${memberId}.pkpass`);
-    return res.send(buf);
+    stream.pipe(res);
   } catch (e) {
+    console.error('Pass generation error:', e);
     return res.status(400).json({ error: e.message });
   }
 }
