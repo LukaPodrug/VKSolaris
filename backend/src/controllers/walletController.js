@@ -3,7 +3,6 @@ import { env } from '../config/env.js';
 import { readFileSync } from 'fs';
 import path from 'path';
 import passkit from 'passkit-generator';
-import { Readable } from 'stream';
 import { GoogleAuth } from 'google-auth-library';
 
 export async function issueWallet(req, res) {
