@@ -22,6 +22,8 @@ export const env = {
   applePassTypeIdentifier: process.env.APPLE_PASS_TYPE_IDENTIFIER,
   appleTeamIdentifier: process.env.APPLE_TEAM_IDENTIFIER,
   applePassCertPath: process.env.APPLE_PASS_CERT_PATH,
+  appleSignerCertPath: process.env.APPLE_SIGNER_CERT_PATH,
+  appleSignerKeyPath: process.env.APPLE_SIGNER_KEY_PATH,
   applePassCertPassword: process.env.APPLE_PASS_CERT_PASSWORD,
   appleWwdrCertPath: process.env.APPLE_WWDR_CERT_PATH,
   // Google Wallet

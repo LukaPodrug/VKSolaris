@@ -42,9 +42,9 @@ export async function generateApplePass(req, res) {
       model: modelPath,
       certificates: {
         wwdr: env.appleWwdrCertPath,
-        signerCert: env.applePassCertPath,
+        signerCert: env.appleSignerCertPath,
         signerKey: {
-          keyFile: env.applePassCertPath,
+          keyFile: env.appleSignerKeyPath,
           passphrase: env.applePassCertPassword,
         },
       },
