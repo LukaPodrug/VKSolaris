@@ -51,7 +51,7 @@ export async function createCheckoutSession(req, res) {
   const cancelUrl = `${env.publicAppBaseUrl}/cancel`;
 
   const params = {
-    mode: 'subscription',
+    mode: 'payment',
     line_items: [{ price: env.stripePriceId, quantity: 1 }],
     success_url: successUrl,
     cancel_url: cancelUrl,
