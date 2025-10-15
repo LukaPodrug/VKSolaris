@@ -3,7 +3,7 @@ import { env } from '../config/env.js';
 import { readFileSync } from 'fs';
 import path from 'path';
 import passkit from 'passkit-generator';
-import streamToBuffer from 'stream-to-buffer';
+import { Readable } from 'stream';
 import { GoogleAuth } from 'google-auth-library';
 
 export async function issueWallet(req, res) {
@@ -70,20 +70,27 @@ export async function generateApplePass(req, res) {
 
     // Generate .pkpass file as a stream
     const stream = await pass.generate();
-    streamToBuffer(stream, (err, buffer) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'Failed to generate pass' });
-      }
-    
-      res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-      res.setHeader('Content-Disposition', `attachment; filename=season-${memberId}.pkpass`);
-      res.send(buffer);
-    });
+    const buffer = await streamToBufferAsync(stream);
+
+    res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=season-${memberId}.pkpass`
+    );
+    res.send(buffer);
   } catch (e) {
     console.error('Pass generation error:', e);
     return res.status(400).json({ error: e.message });
   }
+}
+
+function streamToBufferAsync(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on('data', (chunk) => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+  });
 }
 
 export async function generateGoogleWalletLink(req, res) {
