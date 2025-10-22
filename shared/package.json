@@ -1,0 +1,15 @@
+{
+  "name": "solaris-shared",
+  "version": "1.0.0",
+  "description": "Shared types, constants, and utilities for Solaris Waterpolo Club applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": ["types", "constants", "utilities", "shared"],
+  "author": "Solaris Waterpolo Club",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

@@ -1,0 +1,184 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backend specific
+backend/uploads/
+backend/logs/
+
+# Frontend specific (React)
+admin-frontend/build/
+admin-frontend/.eslintcache
+
+# Mobile app specific (React Native)
+mobile-app/android/app/build/
+mobile-app/android/build/
+mobile-app/android/.gradle/
+mobile-app/android/gradle/
+mobile-app/android/gradlew
+mobile-app/android/gradlew.bat
+mobile-app/android/local.properties
+mobile-app/ios/build/
+mobile-app/ios/Pods/
+mobile-app/ios/*.xcworkspace/xcuserdata/
+mobile-app/ios/*.xcodeproj/xcuserdata/
+mobile-app/ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+mobile-app/.expo/
+mobile-app/.expo-shared/
+
+# React Native specific
+mobile-app/metro.config.js.bak
+mobile-app/.flipper/
+mobile-app/.bundle/
+
+# iOS specific
+mobile-app/ios/Podfile.lock
+
+# Android specific
+mobile-app/android/.project
+mobile-app/android/.settings/
+mobile-app/android/app/.project
+mobile-app/android/app/.settings/
+
+# Keystore files (for Android release builds)
+*.keystore
+*.jks
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+mobile-app/ios/Pods/
+
+# Fastlane
+mobile-app/fastlane/report.xml
+mobile-app/fastlane/Preview.html
+mobile-app/fastlane/screenshots
+mobile-app/fastlane/test_output
+
+# Buck
+mobile-app/buck-out/
+mobile-app/.buckconfig.local
+mobile-app/.buckd/
+mobile-app/.buckversion
+mobile-app/.fakebuckversion
+
+# Watchman
+mobile-app/.watchmanconfig
+
+# Flipper
+mobile-app/.flipper/
+
+# Testing
+coverage/
+.jest/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+
+# Production builds
+build/
+dist/
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Deployment
+.netlify/
+.vercel/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Package locks (uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
